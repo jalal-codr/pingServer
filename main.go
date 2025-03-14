@@ -45,7 +45,6 @@ func StartServer() {
 }
 
 func main() {
-
 	if os.Getenv("RENDER") == "" { // Render sets RENDER env variable in production
 		err := godotenv.Load()
 		if err != nil {
@@ -56,24 +55,42 @@ func main() {
 	// Example URL to send the GET request to
 	url := os.Getenv("API_URL")
 
-	// Create a ticker that ticks every 30 seconds
-	ticker := time.NewTicker(10 * time.Second)
+	// Create a ticker that ticks every 10 minutes
+	ticker := time.NewTicker(10 * time.Minute)
 	defer ticker.Stop()
 
 	// Start the server in a separate goroutine
 	go StartServer()
 
-	// Run the GET request every 30 seconds in the background
+	// Initialize lastRequestTime with the current time
+	lastRequestTime := time.Now()
+	log.Println("Starting periodic requests. First request will be made in 10 minutes.")
+
+	// Run the GET request every 10 minutes in the background
 	for {
 		select {
 		case <-ticker.C:
+			// Calculate and log the time since the last request
+			currentTime := time.Now()
+			elapsedTime := currentTime.Sub(lastRequestTime)
+			log.Printf("Time since last request: %v", elapsedTime)
+
+			// Update lastRequestTime to the current time
+			lastRequestTime = currentTime
+
+			// Log that we're making a request
+			log.Printf("Making GET request to %s", url)
+
+			// Make the request
 			body, err := MakeGetRequest(url)
 			if err != nil {
 				log.Println("Error:", err)
 				continue
 			}
+
 			// Print the response body
-			fmt.Println("Response Body:", body)
+			log.Println("Response received at:", currentTime.Format(time.RFC3339))
+			log.Println("Response Body:", body)
 		}
 	}
 }
