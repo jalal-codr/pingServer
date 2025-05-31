@@ -53,7 +53,7 @@ func main() {
 	}
 
 	// Example URL to send the GET request to
-	url := os.Getenv("API_URL")
+	url := "https://tradingbot-2w81.onrender.com/"
 
 	// Create a ticker that ticks every 10 minutes
 	ticker := time.NewTicker(10 * time.Minute)
