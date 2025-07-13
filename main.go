@@ -44,7 +44,7 @@ func StartServer() {
 func main() {
 
 	// Example URL to send the GET request to
-	url := "https://tradingbot-2w81.onrender.com/"
+	url := "https://iconconsult-engine.onrender.com/"
 
 	// Create a ticker that ticks every 9 minutes
 	ticker := time.NewTicker(9 * time.Minute)
